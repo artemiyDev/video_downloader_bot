@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  worker:
+    image: worker
+    build:
+      context: ./tiktok
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - rabbitmq
+    restart: always
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+#    command: /bin/sh -c "redis-server --requirepass QwertyUI"
+    restart: always
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=QwertyUI
+      - RABBITMQ_DEFAULT_VHOST=myvhost
+    restart: always

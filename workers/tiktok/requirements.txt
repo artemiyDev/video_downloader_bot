@@ -1,0 +1,5 @@
+celery==5.2.3
+TikTokApi
+redis
+lxml
+beautifulsoup4
