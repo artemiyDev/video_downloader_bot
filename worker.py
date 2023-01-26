@@ -43,9 +43,9 @@ from celery import Celery
 app = Celery('tasks', broker='amqp://user:QwertyUI@84.46.245.185:5672/myvhost', backend='redis://84.46.245.185:6379/0')
 
 print('done')
-proxy_server = 'http://185.239.136.2:8000'
-proxy_login = 'ex8YWp'
-proxy_pass = 'Xs51yQ'
+proxy_server = 'http://gw.mobileproxy.space:1007'
+proxy_login = '3er8FA'
+proxy_pass = '1EFbEw9NAT1f'
 
 tiktok_url = 'https://www.tiktok.com/@karisrose01/video/7184449708402806022?is_from_webapp=1&sender_device=pc'
 

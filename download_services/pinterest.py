@@ -3,7 +3,7 @@ import os
 import time
 import traceback
 
-from data.config import IPV4_PROXY_LIST
+from data.config import PINTEREST_PROXY_LIST
 from loader import root_logger
 from utils.wrappers import async_wrap
 import json
@@ -18,17 +18,21 @@ def get_media(url):
         url = url.split('/sent/')[0]
     for retry in range(5):
         try:
-            proxy = {'http': next(IPV4_PROXY_LIST)}
-            r = requests.get(url, headers={'User-Agent': UA}, proxies=proxy, timeout=10)
+            proxy = 'http://' + next(PINTEREST_PROXY_LIST)
+            proxies = {'http': proxy, 'https': proxy}
+            r = requests.get(url, headers={'User-Agent': UA}, proxies=proxies, timeout=10, allow_redirects=True)
             # print(r.url)
             pin_id = r.url.split('/pin/')[1].split('/')[0]
             break
         except IndexError:
             pass
 
+    if not pin_id:
+        return None
+
     if '/pin/' not in url:
-        r = requests.get(f'https://www.pinterest.com/pin/{pin_id}', headers={'User-Agent': UA}, proxies=proxy,
-                         timeout=10)
+        r = requests.get(f'https://www.pinterest.com/pin/{pin_id}', headers={'User-Agent': UA}, proxies=proxies,
+                         timeout=10, allow_redirects=True)
 
     soup = bs(r.text, 'html.parser')
 
@@ -79,6 +83,8 @@ def get_pin_content(url):
         try:
             result = get_media(url)
             return result
+        except KeyError:
+            continue
         except:
             root_logger.error('Pinterest error' + url)
             root_logger.error('Pinterest error', exc_info=True)
@@ -93,3 +99,9 @@ def save_video(url, user_id):
     with open(file_path, 'wb') as f:
         f.write(r.content)
     return file_path
+
+
+@async_wrap
+def get_pin_file(url):
+    r = requests.get(url)
+    return r.content

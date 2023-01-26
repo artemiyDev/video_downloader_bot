@@ -24,8 +24,8 @@ root_logger.addHandler(handler)
 
 telebot = telebot.TeleBot(config.BOT_TOKEN, )
 
-# bot = Bot(token=config.BOT_TOKEN, server=TelegramAPIServer.from_base('http://38.242.238.106:8081'))
-bot = Bot(token=config.BOT_TOKEN)
+bot = Bot(token=config.BOT_TOKEN, server=TelegramAPIServer.from_base('http://38.242.238.106:8081'))
+# bot = Bot(token=config.BOT_TOKEN)
 storage = MemoryStorage()
 
 dp = Dispatcher(bot, storage=storage)

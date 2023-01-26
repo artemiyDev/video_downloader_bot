@@ -25,3 +25,8 @@ async def create_user(message):
     except UniqueViolationError:
         sql = 'UPDATE users SET first_name = $1, last_name =$2, language_code = $3, blocked = false WHERE tg_id = $4'
         await db.pool.execute(sql, first_name, last_name, language_code, int(user_id))
+
+
+async def update_last_message_and_last_action_timestamp(tg_id, message):
+    sql = 'UPDATE users SET last_message = $1, last_action_timestamp=now() WHERE tg_id = $2'
+    await db.pool.execute(sql, message, int(tg_id))
