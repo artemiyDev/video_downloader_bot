@@ -33,7 +33,7 @@ referrals_status_menu = InlineKeyboardMarkup(
         [InlineKeyboardButton(text='Изменить статус подписки', callback_data='change_subs_status')],
         [InlineKeyboardButton(text='Изменить канал для подписки (ru, eng)', callback_data='change_group_for_subs_ru_eng')],
         [InlineKeyboardButton(text='Изменить канал для подписки (остальные)', callback_data='change_group_for_subs_others')],
-        [InlineKeyboardButton(text='Главное меню', callback_data='main_menu')]
+        [InlineKeyboardButton(text='Главное меню', callback_data='get_subscription_check_status')]
     ],
     resize_keyboard=True
 )

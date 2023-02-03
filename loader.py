@@ -16,10 +16,17 @@ logging.basicConfig(format=u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(
 
 root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)  # or whatever
-handler = logging.FileHandler('bot.log', 'a', 'utf-8')  # or whatever
+handler = logging.FileHandler('bot.log', 'w', 'utf-8')  # or whatever
 handler.setFormatter(
     logging.Formatter(u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(asctime)s]  %(message)s'))  # or whatever
 root_logger.addHandler(handler)
+
+unkwnown_links_logger = logging.getLogger()
+unkwnown_links_logger.setLevel(logging.CRITICAL)  # or whatever
+unkwnown_links_handler = logging.FileHandler('unkwnown_links.log', 'a', 'utf-8')  # or whatever
+# unkwnown_links_handler.setFormatter(
+#     logging.Formatter(u'%(filename)s [LINE:%(lineno)d] #%(levelname)-8s [%(asctime)s]  %(message)s'))  # or whatever
+unkwnown_links_logger.addHandler(unkwnown_links_handler)
 
 
 telebot = telebot.TeleBot(config.BOT_TOKEN, )
