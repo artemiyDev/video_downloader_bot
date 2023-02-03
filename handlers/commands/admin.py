@@ -248,7 +248,7 @@ async def get_subscription_check_status(callback: CallbackQuery):
 async def change_ref_status_handler(callback: CallbackQuery):
     config.subscription_check = not config.subscription_check
     await toggle_subscription_check_status()
-    reply_message = f'Статус рефераллов изменен на {"Включен" if config.referrals_enabled else "Выключен"}'
+    reply_message = f'Статус подписки изменен на {"Включен" if config.subscription_check else "Выключен"}'
     await callback.message.answer(reply_message, reply_markup=referrals_status_menu)
 
 
