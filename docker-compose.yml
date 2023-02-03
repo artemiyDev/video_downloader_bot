@@ -3,7 +3,7 @@ version: "3.1"
 
 services:
   tgbot:
-    container_name: instarockbot
+    container_name: downloader_bot
     build:
       context: .
     command: python app.py
@@ -14,16 +14,15 @@ services:
       - .:/app
     depends_on:
       - telegram-bot-api
-  telegram-bot-api:
-    image: aiogram/telegram-bot-api:latest
-    environment:
-      TELEGRAM_API_ID: "561291"
-      TELEGRAM_API_HASH: "aa293526c18d1c9ffa77f5cc0ef1c483"
-    volumes:
-      - telegram-bot-api-data:/var/lib/telegram-bot-api
-    ports:
-      - 8081:8081
-    restart: always
-
+#  telegram-bot-api:
+#    image: aiogram/telegram-bot-api:latest
+#    environment:
+#      TELEGRAM_API_ID: "561291"
+#      TELEGRAM_API_HASH: "aa293526c18d1c9ffa77f5cc0ef1c483"
+#    volumes:
+#      - telegram-bot-api-data:/var/lib/telegram-bot-api
+#    ports:
+#      - 8081:8081
+#    restart: always
 volumes:
   telegram-bot-api-data:
