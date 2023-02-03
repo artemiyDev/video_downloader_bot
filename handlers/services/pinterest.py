@@ -11,7 +11,7 @@ from loader import dp
 from utils.db_api.stat import increase_stat
 from utils.db_api.user import update_last_message_and_last_action_timestamp
 
-from utils.text_constants import MAIN_MENU_MESSAGE
+
 
 
 

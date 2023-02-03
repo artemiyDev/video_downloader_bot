@@ -7,7 +7,6 @@ from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.utils.exceptions import Throttled
 
 
-from utils.text_constants import MAIN_MENU_MESSAGE
 
 
 class ThrottlingMiddleware(BaseMiddleware):
@@ -62,4 +61,3 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         await asyncio.sleep(delta)
         await dispatcher.current_state().finish()
-        await message.reply(MAIN_MENU_MESSAGE)
