@@ -15,7 +15,7 @@ async def increase_stat(column):
     elif column == 'youtube':
         sql = "UPDATE stat set youtube = youtube + 1 WHERE date = CURRENT_DATE"
 
-    if await db.pool.execute(sql, column) == 'UPDATE 0':
+    if await db.pool.execute(sql) == 'UPDATE 0':
         try:
             await db.pool.execute("INSERT into stat DEFAULT VALUES")
         except:
