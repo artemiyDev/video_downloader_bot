@@ -7,9 +7,10 @@ from loader import bot
 
 
 class IsSubscriber(BoundFilter):
-    async def check(self, callback: types.CallbackQuery):
+    async def check(self, message: types.Message):
         if config.test or  not config.subscription_check:
             return True
+        print(message)
         language_code = callback["from"]["language_code"]
 
         if language_code == 'en' or language_code == 'ru':
