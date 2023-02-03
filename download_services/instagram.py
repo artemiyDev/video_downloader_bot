@@ -2,7 +2,6 @@ import asyncio
 import os
 import traceback
 import requests
-import instaloader
 from instaloader import Post, TopSearchResults, QueryReturnedBadRequestException, TooManyRequestsException, \
     ConnectionException, LoginRequiredException, BadResponseException, BadResponseExceptionMeta
 from operator import itemgetter
@@ -168,7 +167,7 @@ def get_hashtags(search_string):
 @async_wrap
 def save_reel(short_code, url):
     r = requests.get(url)
-    file_path = f"./utils/temp_reels/{short_code}.mp4"
+    file_path = f"download_services/temp/instagram/{short_code}.mp4"
     with open(file_path, 'wb') as f:
         f.write(r.content)
     return file_path
@@ -177,19 +176,3 @@ def save_reel(short_code, url):
 @async_wrap
 def del_temp_reel(filepath):
     os.remove(filepath)
-
-
-@async_wrap
-def check_is_reel_huge(url):
-    for retry in range(3):
-        try:
-            size = int(requests.get(url, stream=True, headers={
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.84 Safari/537.36'}).headers[
-                           'Content-length'])
-            if size > 50000000:
-                return True
-            else:
-                return False
-        except:
-            traceback.print_exc()
-            pass

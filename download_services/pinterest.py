@@ -95,7 +95,7 @@ def get_pin_content(url):
 @async_wrap
 def save_video(url, user_id):
     r = requests.get(url)
-    file_path = f"./utils/temp_pins/{str(user_id)}_{str(int(time.time()))}.mp4"
+    file_path = f"download_services/temp/pinterest/{str(user_id)}_{str(int(time.time()))}.mp4"
     with open(file_path, 'wb') as f:
         f.write(r.content)
     return file_path

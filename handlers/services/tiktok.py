@@ -4,12 +4,12 @@ from aiogram.utils.exceptions import InvalidHTTPUrlContent, CantParseEntities
 from data.config import DEVELOPER
 from download_services.tiktok import get_tiktok_video_url, save_tiktok
 from loader import dp, root_logger
+from utils.db_api.stat import increase_stat
 from utils.db_api.tiktoks import get_used_tiktok_from_db, write_tiktok_to_db
 
 
 @dp.message_handler(regexp='.*tiktok\.com\/@.*\/video.*')
 async def echo(message: types.Message):
-
     try:
         tiktok_url = message.text.split('?')[0]
 
@@ -29,6 +29,7 @@ async def echo(message: types.Message):
 
             file_id = message_data['video']['file_id']
             await write_tiktok_to_db(tiktok_url, file_id)
+        await increase_stat('tiktok')
     except Exception as e:
         root_logger.error('Error tiktok download ' + str(tiktok_url), exc_info=True)
         try:

@@ -20,7 +20,7 @@ from celery import Celery
 @async_wrap
 def save_tiktok(url):
     r = requests.get(url)
-    file_path = f"./123.mp4"
+    file_path = f"download_services/temp/pinterest/{url.split('?vid=')[1]}.mp4"
     with open(file_path, 'wb') as f:
         f.write(r.content)
     return file_path

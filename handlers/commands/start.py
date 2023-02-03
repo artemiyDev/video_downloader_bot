@@ -15,4 +15,4 @@ async def bot_start(message: types.Message, state: FSMContext):
     if current_state is not None:
         await state.finish()
 
-    await message.answer(START_MESSAGE, reply_markup=start_menu)
+    await message.answer(START_MESSAGE,parse_mode=types.ParseMode.HTML)

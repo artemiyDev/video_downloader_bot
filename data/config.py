@@ -1,5 +1,4 @@
 from itertools import cycle
-
 from environs import Env
 
 env = Env()
@@ -14,9 +13,8 @@ PGUSER = env.str("PGUSER")
 PGPASSWORD = env.str("PGPASSWORD")
 ip = env.str("ip")
 
-
 # referrals
-referrals_enabled = True
+subscription_check = True
 chanel_for_subs_ru_eng = ''
 chanel_for_subs_others = ''
 
@@ -33,5 +31,3 @@ if env.str("TEST").lower() == 'true':
     test = True
 else:
     test = False
-
-

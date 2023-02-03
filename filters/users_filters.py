@@ -8,7 +8,7 @@ from loader import bot
 
 class IsSubscriber(BoundFilter):
     async def check(self, callback: types.CallbackQuery):
-        if config.test or  not config.referrals_enabled:
+        if config.test or  not config.subscription_check:
             return True
         language_code = callback["from"]["language_code"]
 

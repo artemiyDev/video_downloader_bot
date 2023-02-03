@@ -7,6 +7,7 @@ from aiogram.utils.exceptions import CantParseEntities
 from data.config import DEVELOPER
 from download_services.youtube import download_youtube_video
 from loader import dp, root_logger
+from utils.db_api.stat import increase_stat
 from utils.db_api.youtube import write_youtube_to_db, get_used_youtube_from_db
 
 
@@ -29,6 +30,7 @@ async def echo(message: types.Message):
             await write_youtube_to_db(video_url, file_id)
             os.remove(video_file_path)
             os.remove(thumb_file_path)
+        await increase_stat('youtube')
     except Exception as e:
         root_logger.error('Error youtube download ' + str(video_url), exc_info=True)
         try:
