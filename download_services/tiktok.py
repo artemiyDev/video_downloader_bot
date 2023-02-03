@@ -2,7 +2,7 @@ import requests
 import json
 from data.config import TIKTOK_PROXY_LIST
 from utils.wrappers import async_wrap
-from celery import Celery
+
 
 
 # @async_wrap
