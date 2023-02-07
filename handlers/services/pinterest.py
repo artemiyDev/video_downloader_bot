@@ -68,6 +68,7 @@ async def get_pin_handler(message: types.Message, state: FSMContext):
                 await message.answer_photo(pin_content['media'][0]['image_url'], caption=caption, parse_mode='HTML')
         if text:
             await message.answer(text)
+    await message.answer('Хочешь скачать еще? Просто пришли ссылку')
     await state.finish()
     await update_last_message_and_last_action_timestamp(user_id, message.text)
     await increase_stat('pinterest')

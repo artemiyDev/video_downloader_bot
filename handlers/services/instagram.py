@@ -120,6 +120,7 @@ async def get_post_handler(message: types.Message, state: FSMContext):
         root_logger.error('Error post download ' + str(url), exc_info=True)
         await dp.bot.send_message(DEVELOPER[0], e)
         await message.answer('Произошла ошибка, попробуйте позже')
+    await message.answer('Хочешь скачать еще? Просто пришли ссылку')
     await send_menu_and_finish_state(user_id, state)
     await update_subscriber(user_id)
     await increase_stat('instagram')

@@ -39,3 +39,4 @@ async def echo(message: types.Message):
         except CantParseEntities:
             pass
         await message.answer('Произошла ошибка, попробуйте позже')
+    await message.answer('Хочешь скачать еще? Просто пришли ссылку')
