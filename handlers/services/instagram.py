@@ -9,6 +9,7 @@ from loader import dp, root_logger
 from utils.db_api.instagram import write_post_to_db, get_used_post_from_db
 from download_services.instagram import get_post_content, save_reel, del_temp_reel
 from utils.db_api.stat import update_last_message_and_last_action_timestamp, increase_stat, update_subscriber
+from utils.text_constants import CAPTION
 
 
 @dp.message_handler(IsSubscriber(), regexp='.*instagram.com.*')
@@ -46,7 +47,7 @@ async def get_post_handler(message: types.Message, state: FSMContext):
     async def send_single_post(post):
         if post.video_url:
             try:
-                message_data = await message.answer_video(post.video_url, caption=caption,
+                message_data = await message.answer_video(post.video_url, caption=CAPTION,
                                                           parse_mode='HTML')
                 try:
                     file_id = message_data['video']['file_id']
@@ -56,12 +57,12 @@ async def get_post_handler(message: types.Message, state: FSMContext):
                 await message.answer('<b>Длинное видео. Дождись загрузки...</b>')
                 file_path = await save_reel(short_code, post.video_url)
                 video = open(file_path, "rb")
-                message_data = await message.answer_video(video=video, caption=caption, parse_mode='HTML')
+                message_data = await message.answer_video(video=video, caption=CAPTION, parse_mode='HTML')
                 file_id = message_data['video']['file_id']
                 await del_temp_reel(file_path)
 
         else:
-            message_data = await message.answer_photo(post.url, caption=caption, parse_mode='HTML')
+            message_data = await message.answer_photo(post.url, caption=CAPTION, parse_mode='HTML')
             file_id = message_data['photo'][-1]['file_id']
         await write_post_to_db(ig_type, short_code, post, file_id)
 
@@ -87,7 +88,7 @@ async def get_post_handler(message: types.Message, state: FSMContext):
             await send_menu_and_finish_state(user_id, state)
             return
 
-        caption = "Бро, спасибо, что пользуешься " + "<a href='https://t.me/instaROCKbot?start=repost'>@instaROCKbot</a>" + "\nОбнял, приподнял!"
+
 
         post_from_db = await get_used_post_from_db(ig_type, short_code)
 
@@ -96,9 +97,9 @@ async def get_post_handler(message: types.Message, state: FSMContext):
             if post_from_db['post_text']:
                 await message.answer(post_from_db['post_text'])
             if post_from_db['post_video']:
-                await message.answer_video(post_from_db['tg_file_id'], caption=caption, parse_mode='HTML')
+                await message.answer_video(post_from_db['tg_file_id'], caption=CAPTION, parse_mode='HTML')
             else:
-                await message.answer_photo(post_from_db['tg_file_id'], caption=caption, parse_mode='HTML')
+                await message.answer_photo(post_from_db['tg_file_id'], caption=CAPTION, parse_mode='HTML')
         else:
             post = await get_post_content(short_code)
             if post == 'error':

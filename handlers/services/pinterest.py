@@ -10,17 +10,11 @@ from filters import IsSubscriber
 from loader import dp
 from utils.db_api.stat import increase_stat
 from utils.db_api.user import update_last_message_and_last_action_timestamp
-
-
-
-
-
-
+from utils.text_constants import CAPTION
 
 
 @dp.message_handler(regexp='.*pinterest.com.*|.*pin.it.*')
 async def get_pin_handler(message: types.Message, state: FSMContext):
-    caption = "Бро, спасибо, что пользуешься " + "<a href='https://t.me/instaROCKbot?start=repost'>@instaROCKbot</a>" + "\nОбнял, приподнял!"
     user_id = str(message.from_user['id'])
     url = message.text.strip()
     print(url)
@@ -44,7 +38,7 @@ async def get_pin_handler(message: types.Message, state: FSMContext):
             text += pin_content['title']
         if pin_content['description']:
             text += '\n\n' + pin_content['description']
-        if len(pin_content['media'])>1:
+        if len(pin_content['media']) > 1:
             message_media = types.MediaGroup()
             for media in pin_content['media']:
                 if media['video_url']:
@@ -56,16 +50,16 @@ async def get_pin_handler(message: types.Message, state: FSMContext):
             # print(pin_content)
             if pin_content['media'][0]['video_url']:
                 try:
-                    await message.answer_video(pin_content['media'][0]['video_url'], caption=caption, parse_mode='HTML')
+                    await message.answer_video(pin_content['media'][0]['video_url'], parse_mode='HTML', caption=CAPTION)
                 except WrongFileIdentifier:
                     await message.answer_video('Видео скачивается...Пожалуйста подождите...')
                     file_path = await save_video(pin_content['media'][0]['video_url'], user_id)
                     video = open(file_path, "rb")
-                    await message.answer_video(video, caption=caption, parse_mode='HTML')
+                    await message.answer_video(video, caption=CAPTION, parse_mode='HTML')
                     os.remove(file_path)
                     pass
             else:
-                await message.answer_photo(pin_content['media'][0]['image_url'], caption=caption, parse_mode='HTML')
+                await message.answer_photo(pin_content['media'][0]['image_url'], caption=CAPTION, parse_mode='HTML')
         if text:
             await message.answer(text)
     await message.answer('Хочешь скачать еще? Просто пришли ссылку')

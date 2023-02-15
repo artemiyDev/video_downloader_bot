@@ -9,6 +9,7 @@ from download_services.youtube import download_youtube_video
 from loader import dp, root_logger
 from utils.db_api.stat import increase_stat
 from utils.db_api.youtube import write_youtube_to_db, get_used_youtube_from_db
+from utils.text_constants import CAPTION
 
 
 @dp.message_handler(regexp='.*youtu\.be\/.*|.*youtube\.com\/.*')
@@ -18,14 +19,14 @@ async def echo(message: types.Message):
 
         video_from_db = await get_used_youtube_from_db(video_url)
         if video_from_db:
-            await message.answer_video(video_from_db['tg_file_id'])
+            await message.answer_video(video_from_db['tg_file_id'],caption=CAPTION, parse_mode='HTML')
         else:
             await message.answer('<b>Дождись загрузки...</b>', parse_mode='HTML')
             video_file_path, thumb_file_path, resolution = await download_youtube_video(video_url)
             video = InputFile(video_file_path)
             thumb = InputFile(thumb_file_path)
             message_data = await message.answer_video(video=video, parse_mode='HTML', supports_streaming=True, thumb=thumb,
-                                                      height=resolution, width=(resolution / 9) * 16)
+                                                      height=resolution, width=(resolution / 9) * 16,caption=CAPTION)
             file_id = message_data['video']['file_id']
             await write_youtube_to_db(video_url, file_id)
             os.remove(video_file_path)
