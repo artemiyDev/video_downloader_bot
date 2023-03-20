@@ -31,7 +31,8 @@ unkwnown_links_logger.addHandler(unkwnown_links_handler)
 
 telebot = telebot.TeleBot(config.BOT_TOKEN, )
 
-bot = Bot(token=config.BOT_TOKEN, server=TelegramAPIServer.from_base('http://38.242.238.106:8081'))
+bot = Bot(token=config.BOT_TOKEN, server=TelegramAPIServer.from_base('http://91.210.168.41:8081'))
+
 # bot = Bot(token=config.BOT_TOKEN)
 storage = MemoryStorage()
 

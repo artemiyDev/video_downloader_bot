@@ -8,7 +8,7 @@ from operator import itemgetter
 
 from accs.login_to_ig_accs import InstaLoaderObjProxy
 from data import config
-from data.config import DEVELOPER
+from data.config import DEVELOPER, INSTAGRAM_PROXY_LIST
 from utils.wrappers import async_wrap
 import loader
 
@@ -166,7 +166,9 @@ def get_hashtags(search_string):
 
 @async_wrap
 def save_reel(short_code, url):
-    r = requests.get(url)
+    proxy = 'http://' + next(INSTAGRAM_PROXY_LIST)
+    proxies = {'http': proxy, 'https': proxy}
+    r = requests.get(url, proxies=proxies)
     file_path = f"download_services/temp/instagram/{short_code}.mp4"
     with open(file_path, 'wb') as f:
         f.write(r.content)

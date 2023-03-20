@@ -21,6 +21,7 @@ chanel_for_subs_others = ''
 # proxy
 TIKTOK_PROXY_LIST = cycle(env.list('PROXY_LIST'))
 PINTEREST_PROXY_LIST = cycle(env.list('PROXY_LIST'))
+INSTAGRAM_PROXY_LIST = cycle(env.list('PROXY_LIST'))
 proxy = env.str("PROXY")
 proxy_change_url = env.str("PROXY_CHANGE_URL")
 failed_connection_attempts = 0
