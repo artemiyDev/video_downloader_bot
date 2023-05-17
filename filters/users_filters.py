@@ -1,3 +1,5 @@
+import traceback
+
 from aiogram.dispatcher.filters import BoundFilter
 from aiogram import types
 from aiogram.dispatcher.handler import CancelHandler
@@ -21,7 +23,7 @@ class IsSubscriber(BoundFilter):
         try:
             chat_member_data = await bot.get_chat_member(chat_for_check, int(message.chat.id))
         except BadRequest:
-            await dp.bot.send_message(DEVELOPER[0], 'Seems like bot is not admin in the subscription group')
+            # await dp.bot.send_message(DEVELOPER[0], 'Seems like bot is not admin in the subscription group')
             return True
         if chat_member_data.status != types.ChatMemberStatus.LEFT:
             return True

@@ -21,10 +21,11 @@ def get_media(url):
             proxy = 'http://' + next(PINTEREST_PROXY_LIST)
             proxies = {'http': proxy, 'https': proxy}
             r = requests.get(url, headers={'User-Agent': UA}, proxies=proxies, timeout=10, allow_redirects=True)
-            # print(r.url)
+            print(r.url)
             pin_id = r.url.split('/pin/')[1].split('/')[0]
             break
         except IndexError:
+            traceback.print_exc()
             pass
 
     if not pin_id:

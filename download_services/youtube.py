@@ -1,11 +1,14 @@
 import requests
-
+import os
 from utils.wrappers import async_wrap
 from pytube import YouTube
+from pytube import innertube
 
 
 @async_wrap
 def download_youtube_video(youtube_url):
+    innertube._cache_dir = '.'
+    innertube._token_file = os.path.join(innertube._cache_dir, 'tokens.json')
     # streams = yt.streams.filter()
     # streams = yt.streams.filter(file_extension='mp4', progressive=True)
 
@@ -13,7 +16,7 @@ def download_youtube_video(youtube_url):
     #     print(stream)
     #     print(stream.filesize)
 
-    youtube_obj = YouTube(youtube_url)
+    youtube_obj = YouTube(youtube_url,use_oauth=True, allow_oauth_cache=True)
     thumb_url = youtube_obj.thumbnail_url.replace('sddefault.jpg', 'maxresdefault.jpg')
     highest_res_video = youtube_obj.streams.get_highest_resolution()
     def_filename = highest_res_video.default_filename.replace(' ', '_')

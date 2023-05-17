@@ -13,7 +13,7 @@ from utils.db_api.user import update_last_message_and_last_action_timestamp
 from utils.text_constants import CAPTION
 
 
-@dp.message_handler(regexp='.*pinterest.com.*|.*pin.it.*')
+@dp.message_handler(IsSubscriber(), regexp='.*pinterest.com.*|.*pin.it.*')
 async def get_pin_handler(message: types.Message, state: FSMContext):
     user_id = str(message.from_user['id'])
     url = message.text.strip()
@@ -22,7 +22,7 @@ async def get_pin_handler(message: types.Message, state: FSMContext):
         url = 'https' + message.text.strip().split('https')[1]
     if 'pin.it/' in url or '/pin/' in url:
         pin_content = await get_pin_content(url)
-        # print(pin_content)
+        print(pin_content)
     else:
         await message.answer('Вы ввели некорректную ссылку!')
         await state.finish()

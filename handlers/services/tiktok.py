@@ -7,9 +7,9 @@ from loader import dp, root_logger
 from utils.db_api.stat import increase_stat
 from utils.db_api.tiktoks import get_used_tiktok_from_db, write_tiktok_to_db
 from utils.text_constants import CAPTION
+from filters import IsSubscriber
 
-
-@dp.message_handler(regexp='.*tiktok\.com\/@.*\/video.*|.*\.tiktok\.com.*')
+@dp.message_handler(IsSubscriber(), regexp='.*tiktok\.com\/@.*\/video.*|.*\.tiktok\.com.*')
 async def echo(message: types.Message):
     try:
         tiktok_url = message.text.split('?')[0]

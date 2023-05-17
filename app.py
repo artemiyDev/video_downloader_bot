@@ -16,7 +16,7 @@ async def on_startup(dp):
     middlewares.setup(dp)
 
     setup_data = await get_setup_data()
-    config.referrals_enabled = setup_data['subscription_check']
+    config.subscription_check = setup_data['subscription_check']
     config.chanel_for_subs_ru_eng = setup_data['group_for_subc_ru_eng']
     config.chanel_for_subs_others = setup_data['group_for_subc_others']
     print(f'Refferals enabled: {config.referrals_enabled}')

@@ -15,6 +15,7 @@ ip = env.str("ip")
 
 # referrals
 subscription_check = True
+referrals_enabled = False
 chanel_for_subs_ru_eng = ''
 chanel_for_subs_others = ''
 
