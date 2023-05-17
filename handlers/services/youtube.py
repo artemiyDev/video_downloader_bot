@@ -27,15 +27,17 @@ async def echo(message: types.Message):
             thumb = InputFile(thumb_file_path)
             message_data = await message.answer_video(video=video, parse_mode='HTML', supports_streaming=True, thumb=thumb,
                                                       height=resolution, width=(resolution / 9) * 16,caption=CAPTION)
-            subscribed = await check_subscription(message)
-            if not subscribed:
-                await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True,
-                                          parse_mode='HTML')
+
             file_id = message_data['video']['file_id']
 
             await write_youtube_to_db(video_url, file_id)
             os.remove(video_file_path)
             os.remove(thumb_file_path)
+        subscribed = await check_subscription(message)
+        print(subscribed)
+        if not subscribed:
+            await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True,
+                                      parse_mode='HTML')
         await increase_stat('youtube')
     except Exception as e:
         root_logger.error('Error youtube download ' + str(video_url), exc_info=True)
