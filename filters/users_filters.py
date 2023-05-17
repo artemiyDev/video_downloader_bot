@@ -32,3 +32,20 @@ class IsSubscriber(BoundFilter):
                 f'Чтобы далее пользоваться этой функцией вступите в наш канал {chat_for_check}')
             # print(chat_member_data)
             raise CancelHandler()
+
+
+async def check_subscription(message: types.Message):
+    language_code = message["from"]["language_code"]
+    if language_code == 'en' or language_code == 'ru':
+        chat_for_check = f'@{str(config.chanel_for_subs_ru_eng)}'
+    else:
+        chat_for_check = f'@{str(config.chanel_for_subs_others)}'
+    try:
+        chat_member_data = await bot.get_chat_member(chat_for_check, int(message.chat.id))
+    except BadRequest:
+        # await dp.bot.send_message(DEVELOPER[0], 'Seems like bot is not admin in the subscription group')
+        return True
+    if chat_member_data.status != types.ChatMemberStatus.LEFT:
+        return True
+    else:
+        return False

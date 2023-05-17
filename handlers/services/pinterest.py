@@ -7,13 +7,14 @@ from aiogram.utils.exceptions import WrongFileIdentifier
 from data.config import ADMINS, DEVELOPER
 from download_services.pinterest import get_pin_content, save_video
 from filters import IsSubscriber
+from filters.users_filters import check_subscription
 from loader import dp
 from utils.db_api.stat import increase_stat
 from utils.db_api.user import update_last_message_and_last_action_timestamp
-from utils.text_constants import CAPTION
+from utils.text_constants import CAPTION, PROMO_MESSAGE
 
 
-@dp.message_handler(IsSubscriber(), regexp='.*pinterest.com.*|.*pin.it.*')
+@dp.message_handler(regexp='.*pinterest.com.*|.*pin.it.*')
 async def get_pin_handler(message: types.Message, state: FSMContext):
     user_id = str(message.from_user['id'])
     url = message.text.strip()
@@ -62,6 +63,9 @@ async def get_pin_handler(message: types.Message, state: FSMContext):
                 await message.answer_photo(pin_content['media'][0]['image_url'], caption=CAPTION, parse_mode='HTML')
         if text:
             await message.answer(text)
+        subscribed = await check_subscription(message)
+        if not subscribed:
+            await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True, parse_mode='HTML')
     await message.answer('Хочешь скачать еще? Просто пришли ссылку')
     await state.finish()
     await update_last_message_and_last_action_timestamp(user_id, message.text)

@@ -3,13 +3,14 @@ from aiogram.utils.exceptions import InvalidHTTPUrlContent, CantParseEntities
 
 from data.config import DEVELOPER
 from download_services.tiktok import get_tiktok_video_url, save_tiktok
+from filters.users_filters import check_subscription
 from loader import dp, root_logger
 from utils.db_api.stat import increase_stat
 from utils.db_api.tiktoks import get_used_tiktok_from_db, write_tiktok_to_db
-from utils.text_constants import CAPTION
+from utils.text_constants import CAPTION, PROMO_MESSAGE
 from filters import IsSubscriber
 
-@dp.message_handler(IsSubscriber(), regexp='.*tiktok\.com\/@.*\/video.*|.*\.tiktok\.com.*')
+@dp.message_handler(regexp='.*tiktok\.com\/@.*\/video.*|.*\.tiktok\.com.*')
 async def echo(message: types.Message):
     try:
         tiktok_url = message.text.split('?')[0]
@@ -30,6 +31,9 @@ async def echo(message: types.Message):
 
             file_id = message_data['video']['file_id']
             await write_tiktok_to_db(tiktok_url, file_id)
+        subscribed = await check_subscription(message)
+        if not subscribed:
+            await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True, parse_mode='HTML')
         await increase_stat('tiktok')
     except Exception as e:
         root_logger.error('Error tiktok download ' + str(tiktok_url), exc_info=True)
