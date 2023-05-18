@@ -1,4 +1,6 @@
 import os
+import time
+import traceback
 
 from aiogram import types
 from aiogram.types import InputFile
@@ -11,7 +13,7 @@ from loader import dp, root_logger
 from utils.db_api.stat import increase_stat
 from utils.db_api.youtube import write_youtube_to_db, get_used_youtube_from_db
 from utils.text_constants import CAPTION, PROMO_MESSAGE
-
+from data import config 
 
 @dp.message_handler(regexp='.*youtu\.be\/.*|.*youtube\.com\/.*')
 async def echo(message: types.Message):
@@ -25,22 +27,42 @@ async def echo(message: types.Message):
             video_file_path, thumb_file_path, resolution = await download_youtube_video(video_url)
             video = InputFile(video_file_path)
             thumb = InputFile(thumb_file_path)
-            message_data = await message.answer_video(video=video, parse_mode='HTML', supports_streaming=True, thumb=thumb,
-                                                      height=resolution, width=(resolution / 9) * 16,caption=CAPTION)
+            for retry in range(12):
+                try:
+                    message_data = await message.answer_video(video=video, parse_mode='HTML', supports_streaming=True, thumb=thumb,
+                                                              height=resolution, width=(resolution / 9) * 16,caption=CAPTION)
+                except:
+                    time.sleep(1)
+
 
             file_id = message_data['video']['file_id']
 
             await write_youtube_to_db(video_url, file_id)
-            os.remove(video_file_path)
-            os.remove(thumb_file_path)
-        subscribed = await check_subscription(message)
-        print(subscribed)
-        if not subscribed:
-            await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True,
-                                      parse_mode='HTML')
+            try:
+                os.remove(video_file_path)
+            except:
+                pass
+            try:
+                os.remove(thumb_file_path)
+            except:
+                pass
+        if config.subscription_check:
+            subscribed = await check_subscription(message)
+            if not subscribed:
+                await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True,
+                                          parse_mode='HTML')
         await increase_stat('youtube')
     except Exception as e:
+        traceback.print_exc()
         root_logger.error('Error youtube download ' + str(video_url), exc_info=True)
+        try:
+            os.remove(video_file_path)
+        except:
+            pass
+        try:
+            os.remove(thumb_file_path)
+        except:
+            pass
         try:
             await dp.bot.send_message(DEVELOPER[0], 'Error youtube download')
             await dp.bot.send_message(DEVELOPER[0], e)

@@ -11,7 +11,7 @@ from utils.db_api.instagram import write_post_to_db, get_used_post_from_db
 from download_services.instagram import get_post_content, save_reel, del_temp_reel
 from utils.db_api.stat import update_last_message_and_last_action_timestamp, increase_stat, update_subscriber
 from utils.text_constants import CAPTION, PROMO_MESSAGE
-
+from data import config
 
 @dp.message_handler(regexp='.*instagram.com.*')
 async def get_post_handler(message: types.Message, state: FSMContext):
@@ -118,9 +118,11 @@ async def get_post_handler(message: types.Message, state: FSMContext):
                         await message.answer(post_caption)
                     except:
                         root_logger.error('Error post download ' + str(url), exc_info=True)
-        subscribed = await check_subscription(message)
-        if not subscribed:
-            await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True, parse_mode='HTML')
+        if config.subscription_check:
+            subscribed = await check_subscription(message)
+            if not subscribed:
+                await dp.bot.send_message(message.chat.id, PROMO_MESSAGE, disable_web_page_preview=True,
+                                          parse_mode='HTML')
     except Exception as e:
         root_logger.error('Error post download ' + str(url), exc_info=True)
         await dp.bot.send_message(DEVELOPER[0], e)
